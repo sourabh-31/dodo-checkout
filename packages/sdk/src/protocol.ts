@@ -1,15 +1,9 @@
-export type SDKMessage =
-  | {
-      source: "dodo-sdk";
-      type: "INIT";
-      instanceId: string;
-      productId: string;
-    }
-  | {
-      source: "dodo-sdk";
-      type: "CLOSE";
-      instanceId: string;
-    };
+export type SDKMessage = {
+  source: "dodo-sdk";
+  type: "INIT";
+  instanceId: string;
+  productId: string;
+};
 
 export type CheckoutMessage =
   | {

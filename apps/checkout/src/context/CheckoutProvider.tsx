@@ -13,30 +13,27 @@ import type {
   FormErrors,
 } from "../types";
 import { CheckoutContext } from "./CheckoutContext";
+import { products } from "../data/products";
+import { formatCurrency } from "../lib/utils";
 
 const PROCESSING_MS = 1900;
-const PRODUCT_NAME = "T-Shirt";
-const PRODUCT_AMOUNT = 250;
 
 interface CheckoutProviderProps {
   children: ReactNode;
 }
 
-function formatCurrency(n: number): string {
-  return "\u20B9" + n.toLocaleString("en-IN");
-}
-
 export function CheckoutProvider({ children }: CheckoutProviderProps) {
   const params = new URLSearchParams(window.location.search);
 
-  const instanceId = params.get("instanceId");
-  const productId = params.get("productId");
-  const parentOrigin = params.get("origin");
+  const instanceId = params.get("instanceId") as string;
+  const productId = params.get("productId") as string;
+  const parentOrigin = params.get("origin") as string;
 
-  const productName = PRODUCT_NAME;
-  const amount = PRODUCT_AMOUNT;
+  const activeProduct =
+    products.find((product) => product.id === productId) ?? null;
 
-  console.log(instanceId);
+  const productName = activeProduct?.name ?? "";
+  const amount = activeProduct?.price ?? 0;
 
   const [view, setView] = useState<CheckoutView>("form");
   const [form, setForm] = useState<CheckoutFormData>({
@@ -76,7 +73,7 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
         source: "dodo-checkout",
         type: "CLOSED",
         instanceId,
-        reason: "user",
+        reason: view === "success" ? "success" : "user",
       },
       parentOrigin,
     );
@@ -92,7 +89,7 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && view !== "processing") {
+      if (e.key === "Escape") {
         handleClose();
       }
     };
@@ -138,6 +135,8 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
       switchView,
       handleClose,
       scheduleProcessing,
+      instanceId,
+      parentOrigin,
     }),
     [
       productName,
@@ -156,6 +155,8 @@ export function CheckoutProvider({ children }: CheckoutProviderProps) {
       switchView,
       handleClose,
       scheduleProcessing,
+      instanceId,
+      parentOrigin,
     ],
   );
 

@@ -33,6 +33,8 @@ interface CheckoutContextValue {
   switchView: (next: CheckoutView) => void;
   handleClose: () => void;
   scheduleProcessing: (finish: () => void) => void;
+  instanceId: string;
+  parentOrigin: string;
 }
 
 export const CheckoutContext = createContext<CheckoutContextValue | null>(null);

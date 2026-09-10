@@ -1,5 +1,5 @@
 export function formatCurrency(n: number): string {
-  return "\u20B9" + n.toLocaleString("en-IN");
+  return "\u20B9" + n?.toLocaleString("en-IN");
 }
 
 export function formatCard(v: string): string {

@@ -1,6 +1,12 @@
 import type { CheckoutMessage, SDKMessage } from "./protocol";
+import { createBackdrop, createLoader, createLoadError } from "./loader";
 
 const CHECKOUT_URL = "http://localhost:5173";
+
+const READY_TIMEOUT = 10_000;
+
+// Delay before showing the loader, so a fast READY doesn't cause a flash/glitch.
+const LOADER_DELAY = 150;
 
 type CheckoutOptions = {
   productId: string;
@@ -12,8 +18,11 @@ type CheckoutOptions = {
 let activeCheckout: {
   iframe: HTMLIFrameElement;
   backdrop: HTMLDivElement;
+  loader: HTMLDivElement;
   instanceId: string;
   options: CheckoutOptions;
+  readyTimeout: ReturnType<typeof setTimeout>;
+  loaderTimeout: ReturnType<typeof setTimeout>;
 } | null = null;
 
 function sendMessage(message: SDKMessage) {
@@ -25,12 +34,42 @@ function cleanup() {
     return;
   }
 
+  clearTimeout(activeCheckout.readyTimeout);
+  clearTimeout(activeCheckout.loaderTimeout);
+
   window.removeEventListener("message", handleMessage);
 
   activeCheckout.iframe.remove();
   activeCheckout.backdrop.remove();
+  activeCheckout.loader.remove();
 
   activeCheckout = null;
+}
+
+function handleLoadTimeout() {
+  if (!activeCheckout) {
+    return;
+  }
+
+  const options = activeCheckout.options;
+
+  cleanup();
+
+  const backdrop = createBackdrop();
+  const errorView = createLoadError();
+
+  const retryButton =
+    errorView.querySelector<HTMLButtonElement>("[data-dodo-retry]");
+
+  retryButton?.addEventListener("click", () => {
+    backdrop.remove();
+    errorView.remove();
+
+    open(options);
+  });
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(errorView);
 }
 
 function handleMessage(event: MessageEvent) {
@@ -56,35 +95,52 @@ function handleMessage(event: MessageEvent) {
   }
 
   switch (message.type) {
-    case "READY":
+    case "READY": {
+      clearTimeout(activeCheckout.readyTimeout);
+      clearTimeout(activeCheckout.loaderTimeout);
+
+      activeCheckout.loader.remove();
+
+      activeCheckout.iframe.style.visibility = "visible";
+
+      activeCheckout.iframe.focus();
+
       sendMessage({
         source: "dodo-sdk",
         type: "INIT",
         instanceId: activeCheckout.instanceId,
         productId: activeCheckout.options.productId,
       });
-      break;
 
-    case "SUCCESS":
+      break;
+    }
+
+    case "SUCCESS": {
       activeCheckout.options.onSuccess?.({
         sessionId: message.sessionId,
       });
-      break;
 
-    case "ERROR":
+      break;
+    }
+
+    case "ERROR": {
       activeCheckout.options.onError?.({
         code: message.code,
         message: message.message,
       });
-      break;
 
-    case "CLOSED":
+      break;
+    }
+
+    case "CLOSED": {
       activeCheckout.options.onClose?.({
         reason: message.reason,
       });
 
       cleanup();
+
       break;
+    }
   }
 }
 
@@ -96,23 +152,14 @@ function open(options: CheckoutOptions) {
 
   const instanceId = crypto.randomUUID();
 
-  const backdrop = document.createElement("div");
+  const backdrop = createBackdrop();
+  const loader = createLoader();
   const iframe = document.createElement("iframe");
 
   const params = new URLSearchParams({
     instanceId,
     productId: options.productId,
     origin: window.location.origin,
-  });
-
-  // Backdrop
-  Object.assign(backdrop.style, {
-    position: "fixed",
-    inset: "0",
-    background: "rgba(0, 0, 0, 0.35)",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)",
-    zIndex: "999998",
   });
 
   // Checkout iframe
@@ -126,13 +173,27 @@ function open(options: CheckoutOptions) {
     border: "0",
     background: "transparent",
     zIndex: "999999",
+
+    // Keep iframe hidden until checkout sends READY.
+    visibility: "hidden",
   });
+
+  const readyTimeout = setTimeout(() => {
+    handleLoadTimeout();
+  }, READY_TIMEOUT);
+
+  const loaderTimeout = setTimeout(() => {
+    document.body.appendChild(loader);
+  }, LOADER_DELAY);
 
   activeCheckout = {
     iframe,
     backdrop,
+    loader,
     instanceId,
     options,
+    readyTimeout,
+    loaderTimeout,
   };
 
   window.addEventListener("message", handleMessage);

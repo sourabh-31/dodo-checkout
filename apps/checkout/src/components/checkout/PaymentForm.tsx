@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { CheckoutFormData, FormErrors } from "../../types";
 import { useCheckout } from "../../context/CheckoutContext";
 import Input from "../ui/Input";
@@ -27,7 +27,11 @@ export default function PaymentForm() {
     setOrderId,
     switchView,
     scheduleProcessing,
+    instanceId,
+    parentOrigin,
   } = useCheckout();
+
+  const [failOnceTriggered, setFailOnceTriggered] = useState(false);
 
   const disabled = isProcessing;
 
@@ -112,18 +116,57 @@ export default function PaymentForm() {
             title: "Payment couldn't be completed",
             body: "Your card was declined. Check your details or try another card.",
           });
+
+          // Send error log
+          window.parent.postMessage(
+            {
+              source: "dodo-checkout",
+              type: "ERROR",
+              instanceId,
+              code: "card_declined",
+              message:
+                "Your card was declined. Check your details or try another card.",
+            },
+            parentOrigin,
+          );
           return;
         }
-        if (digits === "4000000000000341") {
+        if (digits === "4000000000000341" && !failOnceTriggered) {
+          setFailOnceTriggered(true);
           setView("form");
           setDeclined({
             title: "Payment couldn't be completed",
             body: "The bank couldn't authorise this attempt. Press Pay again to retry. Nothing has been charged.",
           });
+
+          // Send error log
+          window.parent.postMessage(
+            {
+              source: "dodo-checkout",
+              type: "ERROR",
+              instanceId,
+              code: "payment_failed",
+              message:
+                "The bank couldn't authorise this attempt. Press Pay again to retry. Nothing has been charged.",
+            },
+            parentOrigin,
+          );
           return;
         }
         const id =
           "#DODO-" + Math.random().toString(16).slice(2, 7).toUpperCase();
+
+        // Send success log
+        window.parent.postMessage(
+          {
+            source: "dodo-checkout",
+            type: "SUCCESS",
+            instanceId,
+            sessionId: id,
+          },
+          parentOrigin,
+        );
+
         setView("success");
         setOrderId(id);
       });
@@ -197,7 +240,7 @@ export default function PaymentForm() {
           className="flex items-center gap-3 bg-surface-page border rounded-[14px] py-1 px-4 pl-3 transition-[border-color,box-shadow,background] duration-150"
           style={{ borderColor: emailBorderColor, boxShadow: "none" }}
         >
-          <span className="flex-none size-7 rounded-[7px] bg-linear-to-br from-email-icon-from to-email-icon-to grid place-items-center">
+          <span className="flex-none size-7 rounded-[7px] bg-linear-to-br from-email-icon-from to-email-icon-to grid place-items-center will-change-transform">
             <svg
               width="13"
               height="10"

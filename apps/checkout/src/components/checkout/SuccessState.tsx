@@ -5,8 +5,8 @@ export default function SuccessState() {
   const { productName, form, orderId, total, handleClose } = useCheckout();
 
   return (
-    <div className="flex flex-1 min-h-0 flex-col justify-center pt-2 animate-dodo-fade">
-      <div className="size-11 rounded-[15px] bg-primary flex items-center justify-center shadow-[0_12px_26px_-14px_var(--color-primary-shadow)] animate-dodo-pop">
+    <div className="flex flex-1 min-h-0 flex-col justify-center sm:pt-2 pt-20 animate-dodo-fade">
+      <div className="size-11 rounded-[15px] bg-primary flex items-center justify-center shadow-[0_12px_26px_-14px_var(--color-primary-shadow)] animate-dodo-pop shrink-0">
         <svg
           width="22"
           height="22"
@@ -31,9 +31,9 @@ export default function SuccessState() {
         Payment successful
       </div>
 
-      <div className="text-[14.5px] font-medium leading-[1.6] text-available-desc max-w-[38ch] mt-2.5 animate-dodo-rise-delayed-2">
-        Your {productName} purchase is confirmed. A receipt is on its way to{" "}
-        {form.email || "your inbox"}.
+      <div className="text-[14.5px] font-medium leading-[1.6] text-available-desc mt-2.5 animate-dodo-rise-delayed-2">
+        Your {productName} purchase is confirmed. <br /> A receipt is on its way
+        to {form.email || "your inbox"}.
       </div>
 
       <div className="mt-6 flex flex-col gap-3 pt-4 border-t border-available-divider animate-dodo-rise-delayed-3">

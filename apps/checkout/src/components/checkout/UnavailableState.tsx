@@ -1,11 +1,26 @@
 import Button from "../ui/Button";
 import { useCheckout } from "../../context/CheckoutContext";
+import { useEffect } from "react";
 
 export default function UnavailableState() {
-  const { handleClose } = useCheckout();
+  const { handleClose, instanceId, parentOrigin } = useCheckout();
+
+  useEffect(() => {
+    // Send error log
+    window.parent.postMessage(
+      {
+        source: "dodo-checkout",
+        type: "ERROR",
+        instanceId,
+        code: "item-not-found",
+        message: "The selected item was not found.",
+      },
+      parentOrigin,
+    );
+  }, []);
 
   return (
-    <div className="flex flex-1 min-h-0 flex-col justify-center gap-0 pt-2 animate-dodo-rise">
+    <div className="flex flex-1 min-h-0 flex-col justify-center gap-0 sm:pt-2 pt-20 animate-dodo-rise">
       <div className="size-11 rounded-[14px] bg-badge-bg flex items-center justify-center shadow-[0_10px_24px_-14px_var(--color-badge-shadow)]">
         <svg
           width="21"

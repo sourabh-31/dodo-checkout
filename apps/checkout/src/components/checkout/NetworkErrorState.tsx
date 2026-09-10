@@ -1,11 +1,26 @@
 import Button from "../ui/Button";
 import { useCheckout } from "../../context/CheckoutContext";
+import { useEffect } from "react";
 
 export default function NetworkErrorState() {
-  const { total, handleClose } = useCheckout();
+  const { total, handleClose, instanceId, parentOrigin } = useCheckout();
+
+  useEffect(() => {
+    // Send error log
+    window.parent.postMessage(
+      {
+        source: "dodo-checkout",
+        type: "ERROR",
+        instanceId,
+        code: "network-failed",
+        message: "There was a network issue. Please try again later",
+      },
+      parentOrigin,
+    );
+  }, []);
 
   return (
-    <div className="flex flex-1 min-h-0 flex-col justify-center pt-2 animate-dodo-rise">
+    <div className="flex flex-1 min-h-0 flex-col justify-center sm:pt-2 pt-20 animate-dodo-rise">
       <div className="size-12 rounded-[15px] bg-badge-bg flex items-center justify-center shadow-[0_10px_24px_-14px_var(--color-badge-shadow)]">
         <svg
           width="22"
