@@ -4,16 +4,14 @@ const CHECKOUT_URL = "http://localhost:5173";
 
 type CheckoutOptions = {
   productId: string;
-
   onSuccess?: (data: { sessionId: string }) => void;
-
   onError?: (error: { code: string; message: string }) => void;
-
   onClose?: (data: { reason: "user" | "success" | "programmatic" }) => void;
 };
 
 let activeCheckout: {
   iframe: HTMLIFrameElement;
+  backdrop: HTMLDivElement;
   instanceId: string;
   options: CheckoutOptions;
 } | null = null;
@@ -30,6 +28,7 @@ function cleanup() {
   window.removeEventListener("message", handleMessage);
 
   activeCheckout.iframe.remove();
+  activeCheckout.backdrop.remove();
 
   activeCheckout = null;
 }
@@ -64,14 +63,12 @@ function handleMessage(event: MessageEvent) {
         instanceId: activeCheckout.instanceId,
         productId: activeCheckout.options.productId,
       });
-
       break;
 
     case "SUCCESS":
       activeCheckout.options.onSuccess?.({
         sessionId: message.sessionId,
       });
-
       break;
 
     case "ERROR":
@@ -79,7 +76,6 @@ function handleMessage(event: MessageEvent) {
         code: message.code,
         message: message.message,
       });
-
       break;
 
     case "CLOSED":
@@ -88,7 +84,6 @@ function handleMessage(event: MessageEvent) {
       });
 
       cleanup();
-
       break;
   }
 }
@@ -101,26 +96,48 @@ function open(options: CheckoutOptions) {
 
   const instanceId = crypto.randomUUID();
 
+  const backdrop = document.createElement("div");
   const iframe = document.createElement("iframe");
 
-  iframe.src = `${CHECKOUT_URL}?instanceId=${instanceId}`;
+  const params = new URLSearchParams({
+    instanceId,
+    productId: options.productId,
+    origin: window.location.origin,
+  });
 
-  iframe.style.position = "fixed";
-  iframe.style.inset = "0";
-  iframe.style.width = "100%";
-  iframe.style.height = "100%";
-  iframe.style.border = "0";
-  iframe.style.zIndex = "999999";
-  iframe.style.backgroundColor = "red";
+  // Backdrop
+  Object.assign(backdrop.style, {
+    position: "fixed",
+    inset: "0",
+    background: "rgba(0, 0, 0, 0.35)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+    zIndex: "999998",
+  });
+
+  // Checkout iframe
+  iframe.src = `${CHECKOUT_URL}?${params.toString()}`;
+
+  Object.assign(iframe.style, {
+    position: "fixed",
+    inset: "0",
+    width: "100%",
+    height: "100%",
+    border: "0",
+    background: "transparent",
+    zIndex: "999999",
+  });
 
   activeCheckout = {
     iframe,
+    backdrop,
     instanceId,
     options,
   };
 
   window.addEventListener("message", handleMessage);
 
+  document.body.appendChild(backdrop);
   document.body.appendChild(iframe);
 }
 

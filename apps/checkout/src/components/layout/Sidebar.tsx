@@ -9,7 +9,7 @@ export default function Sidebar() {
         <div className="flex-1 min-w-0 text-[17px] font-semibold tracking-[-0.018em] leading-[1.3]">
           {productName}
         </div>
-        <div className="flex-none text-[17px] font-semibold tracking-[-0.018em] tabular-nums">
+        <div className="flex-none text-[17px] font-medium tracking-[-0.018em] tabular-nums">
           {subtotal}
         </div>
       </div>
@@ -19,7 +19,7 @@ export default function Sidebar() {
           <span className="text-[13.5px] font-medium text-sidebar-label">
             Subtotal
           </span>
-          <span className="text-[13.5px] font-semibold tabular-nums text-panel-text">
+          <span className="text-[13.5px] font-medium tabular-nums text-panel-text">
             {subtotal}
           </span>
         </div>
@@ -35,7 +35,7 @@ export default function Sidebar() {
           <span className="text-[15px] font-semibold tracking-[-0.012em] text-panel-text">
             Total
           </span>
-          <span className="text-[21px] font-semibold tracking-[-0.024em] tabular-nums text-sidebar-total">
+          <span className="text-[21px] font-medium tracking-[-0.024em] tabular-nums text-sidebar-total">
             {total}
           </span>
         </div>

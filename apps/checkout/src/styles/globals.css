@@ -2,10 +2,8 @@
 
 @theme {
   --font-sans:
-    "Instrument Sans", ui-sans-serif, -apple-system, "Helvetica Neue",
-    sans-serif;
+    "General Sans", ui-sans-serif, -apple-system, "Helvetica Neue", sans-serif;
 
-  --color-page: oklch(0.975 0.006 300);
   --color-body: oklch(0.19 0.012 285);
 
   --color-link: oklch(0.53 0.27 302);
@@ -202,7 +200,6 @@
   body {
     margin: 0;
     padding: 0;
-    background: var(--color-page);
   }
 
   body {
@@ -243,5 +240,13 @@
   input:disabled {
     color: var(--color-disabled);
     cursor: not-allowed;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: inherit;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+    transition: background-color 9999s ease-in-out 0s;
   }
 }

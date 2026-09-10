@@ -14,10 +14,11 @@ import type {
 } from "../types";
 import { CheckoutContext } from "./CheckoutContext";
 
+const PROCESSING_MS = 1900;
+const PRODUCT_NAME = "T-Shirt";
+const PRODUCT_AMOUNT = 250;
+
 interface CheckoutProviderProps {
-  productName?: string;
-  amount?: number;
-  processingMs?: number;
   children: ReactNode;
 }
 
@@ -25,12 +26,18 @@ function formatCurrency(n: number): string {
   return "\u20B9" + n.toLocaleString("en-IN");
 }
 
-export function CheckoutProvider({
-  productName = "Premium Pro",
-  amount = 999,
-  processingMs = 1900,
-  children,
-}: CheckoutProviderProps) {
+export function CheckoutProvider({ children }: CheckoutProviderProps) {
+  const params = new URLSearchParams(window.location.search);
+
+  const instanceId = params.get("instanceId");
+  const productId = params.get("productId");
+  const parentOrigin = params.get("origin");
+
+  const productName = PRODUCT_NAME;
+  const amount = PRODUCT_AMOUNT;
+
+  console.log(instanceId);
+
   const [view, setView] = useState<CheckoutView>("form");
   const [form, setForm] = useState<CheckoutFormData>({
     email: "",
@@ -61,19 +68,26 @@ export function CheckoutProvider({
 
   const handleClose = useCallback(() => {
     if (view === "processing") return;
-    clearTimers();
-    setView("form");
-    setDeclined(null);
-    setOrderId(null);
-    setErrors({});
+
+    if (!parentOrigin || !instanceId) return;
+
+    window.parent.postMessage(
+      {
+        source: "dodo-checkout",
+        type: "CLOSED",
+        instanceId,
+        reason: "user",
+      },
+      parentOrigin,
+    );
   }, [view, clearTimers]);
 
   const scheduleProcessing = useCallback(
     (finish: () => void) => {
       clearTimers();
-      processTimerRef.current = setTimeout(finish, processingMs);
+      processTimerRef.current = setTimeout(finish, PROCESSING_MS);
     },
-    [processingMs, clearTimers],
+    [PROCESSING_MS, clearTimers],
   );
 
   useEffect(() => {
