@@ -7,7 +7,8 @@
     "dev": "pnpm --parallel --filter demo --filter checkout dev",
     "dev:demo": "pnpm --filter demo dev",
     "dev:checkout": "pnpm --filter checkout dev",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "build:sdk": "pnpm --filter @dodo/checkout-sdk build"
   },
   "devDependencies": {
     "typescript": "^7.0.2"

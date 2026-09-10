@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Instrument Sans", ui-sans-serif, -apple-system, "Helvetica Neue",
+    sans-serif;
+
+  --color-page: oklch(0.975 0.006 300);
+  --color-body: oklch(0.19 0.012 285);
+
+  --color-link: oklch(0.53 0.27 302);
+  --color-link-hover: oklch(0.45 0.24 302);
+
+  --color-placeholder: oklch(0.66 0.01 285);
+  --color-disabled: oklch(0.62 0.008 285);
+
+  --color-panel-bg: oklch(0.155 0.008 285);
+  --color-panel-text: oklch(0.97 0.003 285);
+  --color-panel-border: oklch(0.26 0.006 285);
+
+  --color-sidebar-label: oklch(0.8 0.006 285);
+  --color-sidebar-value: oklch(0.84 0.006 285);
+  --color-sidebar-total: oklch(0.98 0.003 285);
+  --color-sidebar-secure: oklch(0.74 0.008 285);
+
+  --color-primary: oklch(0.53 0.27 302);
+  --color-primary-hover: oklch(0.47 0.26 302);
+  --color-primary-disabled: oklch(0.44 0.19 302);
+  --color-primary-text: oklch(0.99 0.004 300);
+  --color-primary-shadow: oklch(0.53 0.27 302 / 0.9);
+  --color-primary-focus: oklch(0.53 0.27 302 / 0.22);
+
+  --color-text-primary: oklch(0.19 0.012 285);
+  --color-text-section: oklch(0.21 0.014 285);
+  --color-text-label: oklch(0.4 0.014 285);
+  --color-text-secondary: oklch(0.44 0.014 285);
+  --color-text-muted: oklch(0.5 0.012 285);
+  --color-text-dim: oklch(0.52 0.012 285);
+  --color-text-dimmer: oklch(0.52 0.014 285);
+  --color-text-button: oklch(0.36 0.014 285);
+
+  --color-divider: oklch(0.93 0.005 285);
+  --color-border-input: oklch(0.92 0.006 285);
+  --color-border-card: oklch(0.91 0.006 285);
+  --color-border-field: oklch(0.975 0.006 300);
+
+  --color-surface-page: oklch(0.975 0.006 300);
+  --color-surface-card: oklch(1 0 0);
+
+  --color-icon-muted: oklch(0.55 0.01 285);
+
+  --color-shell-shadow: oklch(0.2 0.04 300 / 0.35);
+  --color-shell-shadow-sm: oklch(0.2 0.04 300 / 0.08);
+
+  --color-button-bg: oklch(1 0 0);
+  --color-button-border: oklch(0.9 0.006 285);
+  --color-button-border-hover: oklch(0.7 0.012 285);
+  --color-button-text: oklch(0.4 0.012 285);
+  --color-button-active-bg: oklch(0.2 0.01 285);
+  --color-button-active-border: oklch(0.2 0.01 285);
+  --color-button-active-text: oklch(0.98 0.003 285);
+  --color-button-test-border: oklch(0.91 0.006 285);
+  --color-button-test-hover-bg: oklch(0.96 0.006 285);
+  --color-button-test-hover-border: oklch(0.78 0.012 285);
+
+  --color-badge-bg: oklch(0.155 0.008 285);
+  --color-badge-shadow: oklch(0.155 0.008 285 / 0.9);
+  --color-badge-icon: oklch(0.99 0 0);
+  --color-badge-error-line: oklch(0.8 0.16 62);
+  --color-badge-network-line: oklch(0.72 0.18 27);
+
+  --color-success-icon: oklch(0.99 0.004 300);
+
+  --color-error-bg: oklch(0.975 0.016 27);
+  --color-error-border: oklch(0.89 0.05 27);
+  --color-error-icon-bg: oklch(0.98 0.012 27);
+  --color-error-icon-border: oklch(0.88 0.05 27);
+  --color-error-icon: oklch(0.55 0.17 27);
+  --color-error-title: oklch(0.38 0.14 27);
+  --color-error-body: oklch(0.44 0.1 27);
+  --color-error-message: oklch(0.5 0.17 27);
+
+  --color-spinner-track: oklch(0.92 0.006 285);
+  --color-spinner-active: oklch(0.53 0.27 302);
+
+  --color-available-desc: oklch(0.44 0.012 285);
+  --color-available-ref-label: oklch(0.5 0.012 285);
+  --color-available-ref-value: oklch(0.24 0.015 285);
+  --color-available-divider: oklch(0.93 0.005 285);
+  --color-outline-border: oklch(0.89 0.008 285);
+  --color-outline-hover-bg: oklch(0.975 0.005 285);
+  --color-outline-hover-border: oklch(0.8 0.01 285);
+
+  --color-email-icon-from: oklch(0.62 0.25 302);
+  --color-email-icon-to: oklch(0.52 0.27 300);
+
+  --animate-dodo-fade: dodo-fade 0.3s ease both;
+  --animate-dodo-rise: dodo-rise 0.32s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  --animate-dodo-rise-delayed-1: dodo-rise 0.4s 0.08s ease both;
+  --animate-dodo-rise-delayed-2: dodo-rise 0.4s 0.14s ease both;
+  --animate-dodo-rise-delayed-3: dodo-rise 0.4s 0.2s ease both;
+  --animate-dodo-rise-delayed-4: dodo-rise 0.4s 0.26s ease both;
+  --animate-dodo-rising-200: dodo-rise 0.2s ease both;
+  --animate-dodo-rising-250: dodo-rise 0.25s ease both;
+  --animate-dodo-shake: dodo-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97)
+    both;
+  --animate-dodo-pop: dodo-pop 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  --animate-dodo-spin: dodo-spin 0.7s linear infinite;
+  --animate-dodo-spin-fast: dodo-spin 0.65s linear infinite;
+  --animate-dodo-draw: dodo-draw 0.5s 0.16s cubic-bezier(0.4, 0, 0.2, 1)
+    forwards;
+  --animate-dodo-bar: dodo-bar 1.15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+
+  @keyframes dodo-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dodo-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes dodo-rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes dodo-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes dodo-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-4px);
+    }
+    40% {
+      transform: translateX(4px);
+    }
+    60% {
+      transform: translateX(-2px);
+    }
+    80% {
+      transform: translateX(2px);
+    }
+  }
+
+  @keyframes dodo-pop {
+    0% {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.06);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes dodo-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes dodo-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(340%);
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-page);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--color-body);
+    font-weight: 500;
+    letter-spacing: -0.006em;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-link-hover);
+  }
+
+  input,
+  button,
+  select {
+    font-family: inherit;
+  }
+
+  input::placeholder {
+    color: var(--color-placeholder);
+    font-weight: 500;
+  }
+
+  input:disabled {
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+}
