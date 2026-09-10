@@ -1,4 +1,9 @@
-import { createContext, useContext, type Dispatch, type SetStateAction } from "react";
+import {
+  createContext,
+  useContext,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type {
   CheckoutView,
   CheckoutFormData,
@@ -34,6 +39,7 @@ export const CheckoutContext = createContext<CheckoutContextValue | null>(null);
 
 export function useCheckout(): CheckoutContextValue {
   const ctx = useContext(CheckoutContext);
-  if (!ctx) throw new Error("useCheckout must be used within a CheckoutProvider");
+  if (!ctx)
+    throw new Error("useCheckout must be used within a CheckoutProvider");
   return ctx;
 }
