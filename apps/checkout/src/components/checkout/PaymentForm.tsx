@@ -1,4 +1,4 @@
-import { useCallback, useMemo, type FormEvent } from "react";
+import { useCallback, useMemo } from "react";
 import type { CheckoutFormData, FormErrors } from "../../types";
 import { useCheckout } from "../../context/CheckoutContext";
 import Input from "../ui/Input";
@@ -72,7 +72,7 @@ export default function PaymentForm() {
   );
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: { preventDefault: () => void }) => {
       e.preventDefault();
       if (view === "processing") return;
 
