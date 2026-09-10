@@ -25,6 +25,18 @@ let activeCheckout: {
   loaderTimeout: ReturnType<typeof setTimeout>;
 } | null = null;
 
+let previousBodyOverflow: string | null = null;
+
+function lockPageScroll() {
+  previousBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+}
+
+function unlockPageScroll() {
+  document.body.style.overflow = previousBodyOverflow ?? "";
+  previousBodyOverflow = null;
+}
+
 function sendMessage(message: SDKMessage) {
   activeCheckout?.iframe.contentWindow?.postMessage(message, CHECKOUT_URL);
 }
@@ -44,6 +56,8 @@ function cleanup() {
   activeCheckout.loader.remove();
 
   activeCheckout = null;
+
+  unlockPageScroll();
 }
 
 function handleLoadTimeout() {
@@ -197,6 +211,8 @@ function open(options: CheckoutOptions) {
   };
 
   window.addEventListener("message", handleMessage);
+
+  lockPageScroll();
 
   document.body.appendChild(backdrop);
   document.body.appendChild(iframe);

@@ -5,6 +5,10 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && pnpm build:script",
+    "build:script": "esbuild src/global.ts --bundle --format=iife --minify --sourcemap --outfile=dist/dodo-checkout.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

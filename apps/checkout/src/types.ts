@@ -3,7 +3,6 @@ export type CheckoutView =
   | "loading"
   | "processing"
   | "success"
-  | "declined"
   | "network"
   | "unavailable";
 
