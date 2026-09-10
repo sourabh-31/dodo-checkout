@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc && pnpm build:script",
-    "build:script": "esbuild src/global.ts --bundle --format=iife --minify --sourcemap --outfile=dist/dodo-checkout.js"
+    "build:script": "esbuild src/global.ts --bundle --format=iife --minify --sourcemap --outfile=dist/browser/dodo-checkout.js"
   },
   "devDependencies": {
     "esbuild": "^0.28.2"
