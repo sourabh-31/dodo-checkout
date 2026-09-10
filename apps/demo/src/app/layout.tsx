@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Demo Ecommerce Site",
@@ -16,7 +17,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        {children}{" "}
+        <Script
+          src="https://my-sdk.pages.dev/dodo-checkout.js"
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   );
 }

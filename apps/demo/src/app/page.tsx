@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DodoCheckout } from "@dodo/checkout-sdk";
 import { Navbar } from "@/components/Navbar";
 import { ProductCard } from "@/components/ProductCard";
 import type { LogEntry } from "@/components/CallbackLog";
@@ -21,7 +20,7 @@ export default function Home() {
   function handleBuy(product: Product) {
     addLog("onBuyNow", `${product.name}, ${product.price}`);
 
-    DodoCheckout.open({
+    window.DodoCheckout.open({
       productId: product.id,
 
       onSuccess: (data) => {
@@ -43,7 +42,9 @@ export default function Home() {
       <Navbar logs={logs} onClear={() => setLogs([])} />
 
       <main className="mt-3 rounded-2xl bg-white p-4 shadow-sm sm:mt-4 sm:rounded-3xl sm:p-6">
-        <h1 className="text-lg font-semibold tracking-tight sm:text-2xl">Products</h1>
+        <h1 className="text-lg font-semibold tracking-tight sm:text-2xl">
+          Products
+        </h1>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-6 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">
           {products.map((product) => (

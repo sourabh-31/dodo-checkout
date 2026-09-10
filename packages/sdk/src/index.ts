@@ -1,7 +1,7 @@
 import type { CheckoutMessage, SDKMessage } from "./protocol";
 import { createBackdrop, createLoader, createLoadError } from "./loader";
 
-const CHECKOUT_URL = "http://localhost:5173";
+const CHECKOUT_URL = "https://super-sea-964a.sourabhhaldarh.workers.dev";
 
 const READY_TIMEOUT = 10_000;
 

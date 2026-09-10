@@ -1,5 +1,5 @@
 import { createBackdrop, createLoader, createLoadError } from "./loader";
-const CHECKOUT_URL = "http://localhost:5173";
+const CHECKOUT_URL = "https://super-sea-964a.sourabhhaldarh.workers.dev";
 const READY_TIMEOUT = 10000;
 // Delay before showing the loader, so a fast READY doesn't cause a flash/glitch.
 const LOADER_DELAY = 150;
