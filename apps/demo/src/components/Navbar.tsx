@@ -6,9 +6,11 @@ import { CallbackLog, type LogEntry } from "@/components/CallbackLog";
 type NavbarProps = {
   logs: LogEntry[];
   onClear: () => void;
+  search: string;
+  onSearchChange: (value: string) => void;
 };
 
-export function Navbar({ logs, onClear }: NavbarProps) {
+export function Navbar({ logs, onClear, search, onSearchChange }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +31,7 @@ export function Navbar({ logs, onClear }: NavbarProps) {
   }, [open]);
 
   return (
-    <nav className="flex items-center gap-2 rounded-2xl bg-white px-3 py-3 shadow-sm sm:gap-3 sm:rounded-3xl sm:px-6 sm:py-5">
+    <nav className="flex flex-wrap items-center gap-2 rounded-2xl bg-white px-3 py-3 shadow-sm sm:gap-3 sm:rounded-3xl sm:px-6 sm:py-5">
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-demo-ink sm:h-9 sm:w-9 sm:rounded-xl">
         <div className="h-2.5 w-2.5 rotate-45 rounded-sm bg-white sm:h-3.5 sm:w-3.5" />
       </div>
@@ -70,6 +72,42 @@ export function Navbar({ logs, onClear }: NavbarProps) {
             <CallbackLog logs={logs} onClear={onClear} />
           </div>
         )}
+      </div>
+
+      <div className="relative hidden max-w-xs shrink-0 sm:block">
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 stroke-gray-400"
+        >
+          <circle cx="9" cy="9" r="6" strokeWidth="1.5" />
+          <path d="M17 17l-3.5-3.5" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Search products..."
+          className="w-full rounded-xl bg-demo-chip py-2.5 pr-3 pl-9 text-sm font-medium outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-demo-accent-soft"
+        />
+      </div>
+
+      <div className="relative order-last w-full sm:hidden">
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 stroke-gray-400"
+        >
+          <circle cx="9" cy="9" r="6" strokeWidth="1.5" />
+          <path d="M17 17l-3.5-3.5" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Search products..."
+          className="w-full rounded-xl bg-demo-chip py-2.5 pr-3 pl-9 text-sm font-medium outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-demo-accent-soft"
+        />
       </div>
     </nav>
   );
