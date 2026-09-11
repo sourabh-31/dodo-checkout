@@ -4,7 +4,10 @@ A tiny embeddable checkout. A website drops in one script, calls one function, a
 
 ## Live link
 
-Not deployed yet. Everything below runs locally.
+Both are deployed to Cloudflare Workers:
+
+- Demo: [demo.sourabhhaldarh.workers.dev](https://demo.sourabhhaldarh.workers.dev/)
+- Checkout: [super-sea-964a.sourabhhaldarh.workers.dev](https://super-sea-964a.sourabhhaldarh.workers.dev), which the SDK points to by default (`CHECKOUT_URL` in `packages/sdk/src/index.ts`)
 
 ## The three pieces
 
@@ -33,6 +36,8 @@ pnpm dev:demo       # demo site only, port 3000
 ```
 
 The SDK doesn't need a dev server of its own. The demo currently imports it directly as a workspace package (`@dodo/checkout-sdk`), since it lives in the same monorepo.
+
+Note that the SDK's `CHECKOUT_URL` is hardcoded to the deployed checkout above, not `localhost:5173`. So clicking "Buy now" on the demo opens the live checkout even when running everything locally — `pnpm dev:checkout` is for developing the checkout app in isolation, not for wiring it up to a local demo. To test checkout changes end-to-end, point `CHECKOUT_URL` in `packages/sdk/src/index.ts` at `http://localhost:5173` temporarily.
 
 `pnpm build:sdk` also produces a second, separate output: `packages/sdk/dist/dodo-checkout.js`. That one is a single self-contained file (no imports, everything bundled and minified) meant for a real third-party site with no bundler of its own. Dropped in as a plain script tag, it sets up `window.DodoCheckout` the same way the npm import does:
 
@@ -83,3 +88,13 @@ No. The SDK only ever sends a `productId`. The checkout app resolves the product
 Early on the loading spinner appeared the instant `open()` was called, which meant it would flicker on screen for a frame or two even when the checkout loaded almost instantly, an ugly, jittery first impression. Instead the spinner is now delayed by 150ms, so it only shows up if the checkout genuinely takes a moment to load. On a fast connection, the customer just sees the checkout appear.
 
 ## What I'd explore next
+
+This prototype intentionally keeps the payment flow entirely in the browser. For a production version, I'd explore:
+
+- **Real payment processing** — move payment authorization to a secure backend/payment provider instead of simulating it in the browser.
+- **Server-side product and price resolution** — make the checkout fetch trusted product/price data from an API rather than maintaining a local catalog.
+- **Checkout session API** — create a short-lived server-side checkout session containing the product, amount, currency, and merchant context.
+- **SDK distribution** — publish the SDK through a CDN and/or npm with versioned releases.
+- **Automated testing** — add unit tests for the SDK message protocol, form validation, payment state transitions, and retry behaviour, plus end-to-end tests for the complete iframe flow.
+- **Stronger iframe security** — tighten CSP, iframe permissions, and origin configuration for production environments.
+- **Observability** — add structured error reporting and metrics around checkout loading, payment failures, and checkout completion.
